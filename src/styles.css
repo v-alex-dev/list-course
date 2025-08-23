@@ -1,0 +1,199 @@
+@import 'tailwindcss';
+
+/* Reset et styles de base pour l'application */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f8fafc;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+/* Styles pour les scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animation d'entrée pour les éléments */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Styles pour les focus accessibles */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Styles responsive */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-group label {
+  @apply block text-sm font-medium text-gray-300 mb-2;
+}
+
+/* Inputs avec style glass et rounded-full */
+.form-input,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+  @apply w-full rounded-full bg-gray-800/50 backdrop-blur-sm border border-gray-600/50 
+         px-4 py-3 text-gray-200 placeholder-gray-500 transition-all duration-300
+         focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50
+         hover:border-gray-500/70 hover:bg-gray-700/50;
+}
+
+textarea {
+  @apply rounded-xl min-h-[100px] resize-none;
+}
+
+select {
+  @apply cursor-pointer;
+}
+
+/* === LIENS NÉON === */
+
+.link-neon {
+  @apply text-cyan-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]
+         hover:scale-105 cursor-pointer;
+}
+
+.link-neon-pink {
+  @apply text-pink-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-pink-300 hover:drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]
+         hover:scale-105 cursor-pointer;
+}
+
+.link-neon-green {
+  @apply text-green-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-green-300 hover:drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]
+         hover:scale-105 cursor-pointer;
+}
+
+/* === ONGLETS === */
+
+.tabs-container {
+  @apply bg-gray-900/30 backdrop-blur-lg border border-gray-600/30 rounded-xl p-1 
+         flex space-x-1 shadow-xl;
+}
+
+.tab {
+  @apply flex-1 px-4 py-2 rounded-lg text-center font-medium transition-all duration-300
+         text-gray-400 hover:text-gray-200 hover:bg-gray-700/50 cursor-pointer;
+}
+
+.tab.active {
+  @apply bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-sm 
+         border border-cyan-400/30 text-white shadow-lg
+         drop-shadow-[0_0_8px_rgba(34,211,238,0.3)];
+}
+
+.tab:hover:not(.active) {
+  @apply bg-gray-700/30 backdrop-blur-sm scale-105;
+}
+
+/* === CARDS GLASS === */
+
+.card-glass {
+  @apply bg-gray-900/40 backdrop-blur-lg border border-gray-600/30 rounded-xl p-6 
+         shadow-2xl transition-all duration-300 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] hover:scale-[1.02]
+         hover:border-gray-500/50;
+}
+
+.card-glass-highlight {
+  @apply bg-gradient-to-br from-cyan-500/10 to-purple-500/10 backdrop-blur-lg 
+         border border-cyan-400/20 rounded-xl p-6 shadow-2xl transition-all duration-300
+         hover:shadow-[0_25px_50px_-12px_rgba(34,211,238,0.3)] hover:scale-[1.02] hover:border-cyan-400/40
+         hover:from-cyan-500/15 hover:to-purple-500/15;
+}
+
+/* === EFFECTS === */
+
+.glow-cyan {
+  @apply drop-shadow-[0_0_15px_rgba(34,211,238,0.5)];
+}
+
+.glow-purple {
+  @apply drop-shadow-[0_0_15px_rgba(168,85,247,0.5)];
+}
+
+.glow-pink {
+  @apply drop-shadow-[0_0_15px_rgba(244,114,182,0.5)];
+}
+
+/* Animation de pulsation pour les éléments importants */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.8));
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  .form {
+    @apply mx-4 p-4;
+  }
+
+  .tabs-container {
+    @apply flex-col space-x-0 space-y-1;
+  }
+
+  .btn-glass,
+  .btn-glass-primary,
+  .btn-glass-secondary {
+    @apply w-full;
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "viande",
+      "color": "#e74c3c",
+      "icon": "🥩"
+    },
+    {
+      "id": 2,
+      "name": "poisson",
+      "color": "#3498db",
+      "icon": "🐟"
+    },
+    {
+      "id": 3,
+      "name": "légumes",
+      "color": "#2ecc71",
+      "icon": "🥬"
+    },
+    {
+      "id": 4,
+      "name": "fruits",
+      "color": "#f39c12",
+      "icon": "🍎"
+    },
+    {
+      "id": 5,
+      "name": "ménager",
+      "color": "#9b59b6",
+      "icon": "🧽"
+    },
+    {
+      "id": 6,
+      "name": "boissons",
+      "color": "#1abc9c",
+      "icon": "🥤"
+    },
+    {
+      "id": 7,
+      "name": "épicerie",
+      "color": "#34495e",
+      "icon": "🏪"
+    },
+    {
+      "id": 8,
+      "name": "boulangerie",
+      "color": "#d35400",
+      "icon": "🍞"
+    },
+    {
+      "id": 9,
+      "name": "snacks",
+      "color": "#f39c12",
+      "icon": "🍿"
+    },
+    {
+      "id": 10,
+      "name": "frais",
+      "color": "#16a085",
+      "icon": "❄️"
+    }
+  ]
+}
