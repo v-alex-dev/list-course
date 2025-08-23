@@ -62,8 +62,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useShoppingListStore } from '../stores/counter.js'
+import { useProfileStore } from '../stores/profiles.js'
 
-const store = useShoppingListStore()
+const shoppingStore = useShoppingListStore()
+const profileStore = useProfileStore()
 
 defineProps({
   isOpen: {
@@ -80,7 +82,7 @@ const form = ref({
   tagId: null,
 })
 
-const tags = computed(() => store.tags)
+const tags = computed(() => shoppingStore.tags)
 
 const canSubmit = computed(() => {
   return form.value.name.trim() && form.value.tagId
@@ -90,9 +92,9 @@ const selectTag = (tagId) => {
   form.value.tagId = tagId
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (canSubmit.value) {
-    store.addItem({
+    await profileStore.addItem({
       name: form.value.name.trim(),
       quantity: form.value.quantity,
       tagId: form.value.tagId,
@@ -111,7 +113,7 @@ const handleSubmit = () => {
 
 const closeModal = () => {
   emit('close')
-  store.closeModal()
+  shoppingStore.closeModal()
 }
 </script>
 

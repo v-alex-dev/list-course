@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProfileStore } from '../stores/profiles.js'
 
@@ -25,25 +25,39 @@ const selectProfile = async (profileId) => {
   }
 }
 
-const createProfile = () => {
+const createProfile = async () => {
   if (!newProfileForm.value.name.trim()) return
 
-  const newProfile = profileStore.createProfile({
-    name: newProfileForm.value.name.trim(),
-    avatar: newProfileForm.value.avatar,
-  })
+  try {
+    const newProfile = await profileStore.createProfile({
+      name: newProfileForm.value.name.trim(),
+      avatar: newProfileForm.value.avatar,
+    })
 
-  // Reset form
-  newProfileForm.value = { name: '', avatar: '👤' }
-  showCreateForm.value = false
+    // Reset form
+    newProfileForm.value = { name: '', avatar: '👤' }
+    showCreateForm.value = false
 
-  // Aller directement sur le nouveau profil
-  selectProfile(newProfile.id)
+    // Aller directement sur le nouveau profil
+    await selectProfile(newProfile.id)
+  } catch (error) {
+    console.error('Erreur lors de la création du profil:', error)
+    // Optionnel : afficher un message d'erreur à l'utilisateur
+  }
 }
 
 const selectAvatar = (avatar) => {
   newProfileForm.value.avatar = avatar
 }
+
+// Charger les profils au montage du composant
+onMounted(async () => {
+  try {
+    await profileStore.loadProfiles()
+  } catch (error) {
+    console.error('Erreur lors du chargement des profils:', error)
+  }
+})
 </script>
 
 <template>

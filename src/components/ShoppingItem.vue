@@ -66,8 +66,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useShoppingListStore } from '../stores/counter.js'
+import { useProfileStore } from '../stores/profiles.js'
 
-const store = useShoppingListStore()
+const shoppingStore = useShoppingListStore()
+const profileStore = useProfileStore()
 
 const props = defineProps({
   item: {
@@ -79,11 +81,11 @@ const props = defineProps({
 const showConfirm = ref(false)
 
 const tag = computed(() => {
-  return store.getTagById(props.item.tagId)
+  return shoppingStore.getTagById(props.item.tagId)
 })
 
-const toggleCompleted = () => {
-  store.toggleItemCompleted(props.item.id)
+const toggleCompleted = async () => {
+  await profileStore.toggleItemCompleted(props.item.id)
 }
 
 const showDeleteConfirm = () => {
@@ -94,8 +96,8 @@ const hideDeleteConfirm = () => {
   showConfirm.value = false
 }
 
-const confirmDelete = () => {
-  store.removeItem(props.item.id)
+const confirmDelete = async () => {
+  await profileStore.removeItem(props.item.id)
   hideDeleteConfirm()
 }
 </script>

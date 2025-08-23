@@ -10,24 +10,21 @@ import FloatingActionButton from '../components/FloatingActionButton.vue'
 
 const route = useRoute()
 const router = useRouter()
-const store = useShoppingListStore()
+const shoppingStore = useShoppingListStore()
 const profileStore = useProfileStore()
 
-const filteredItems = computed(() => store.filteredItems)
-const isModalOpen = computed(() => store.isModalOpen)
-const completedItemsCount = computed(() => store.completedItemsCount)
-const totalItemsCount = computed(() => store.totalItemsCount)
+const filteredItems = computed(() => profileStore.filteredItems)
+const isModalOpen = computed(() => shoppingStore.isModalOpen)
+const completedItemsCount = computed(() => profileStore.completedItemsCount)
+const totalItemsCount = computed(() => profileStore.totalItemsCount)
 const currentProfile = computed(() => profileStore.currentProfile)
 
-const uncompletedItems = computed(() => {
-  return filteredItems.value.filter((item) => !item.completed)
-})
-const completedItems = computed(() => {
-  return filteredItems.value.filter((item) => item.completed)
-})
+// Utilisons les getters du profileStore directement
+const uncompletedItems = computed(() => profileStore.uncompletedItems)
+const completedItems = computed(() => profileStore.completedItems)
 
-const clearCompleted = () => {
-  store.clearCompleted()
+const clearCompleted = async () => {
+  await profileStore.clearCompleted()
 }
 
 const goBackToProfiles = () => {
@@ -40,8 +37,7 @@ onMounted(async () => {
   const profileId = route.params.profileId
   if (profileId) {
     try {
-      const profile = await profileStore.loadProfile(profileId)
-      store.loadProfileItems(profile.items)
+      await profileStore.loadProfile(profileId)
     } catch (error) {
       console.error('Erreur lors du chargement du profil:', error)
       router.push({ name: 'profile-selection' })
@@ -60,6 +56,8 @@ onMounted(async () => {
         <div class="profile-badge">
           <span class="profile-avatar">{{ currentProfile.avatar }}</span>
           <span class="profile-name">{{ currentProfile.name }}</span>
+        </div>
+        <div class="profile-actions">
           <button @click="goBackToProfiles" class="change-profile-btn">🔄 Changer</button>
         </div>
       </div>
@@ -117,7 +115,7 @@ onMounted(async () => {
     <FloatingActionButton />
 
     <!-- Modal d'ajout -->
-    <AddItemModal :is-open="isModalOpen" @close="store.closeModal" />
+    <AddItemModal :is-open="isModalOpen" @close="shoppingStore.closeModal" />
   </div>
 </template>
 
@@ -156,6 +154,13 @@ onMounted(async () => {
 .profile-name {
   color: #f9fafb;
   font-weight: 500;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: center;
 }
 
 .change-profile-btn {
