@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useShoppingListStore } from '../stores/counter.js'
+import { useShoppingListStore } from '../stores/shoppingList.js'
 import { useProfileStore } from '../stores/profiles.js'
 import TagFilters from '../components/TagFilters.vue'
 import ShoppingItem from '../components/ShoppingItem.vue'
@@ -13,33 +13,37 @@ const router = useRouter()
 const shoppingStore = useShoppingListStore()
 const profileStore = useProfileStore()
 
-const filteredItems = computed(() => profileStore.filteredItems)
+const filteredItems = computed(() => shoppingStore.filteredItems)
 const isModalOpen = computed(() => shoppingStore.isModalOpen)
-const completedItemsCount = computed(() => profileStore.completedItemsCount)
-const totalItemsCount = computed(() => profileStore.totalItemsCount)
+const completedItemsCount = computed(() => shoppingStore.completedItemsCount)
+const totalItemsCount = computed(() => shoppingStore.totalItemsCount)
 const currentProfile = computed(() => profileStore.currentProfile)
 
-// Utilisons les getters du profileStore directement
-const uncompletedItems = computed(() => profileStore.uncompletedItems)
-const completedItems = computed(() => profileStore.completedItems)
+// Utilisons les getters du shoppingStore
+const uncompletedItems = computed(() => shoppingStore.uncompletedItems)
+const completedItems = computed(() => shoppingStore.completedItems)
 
 const clearCompleted = async () => {
-  await profileStore.clearCompleted()
+  await shoppingStore.clearCompleted()
 }
 
 const goBackToProfiles = () => {
   profileStore.clearCurrentProfile()
+  shoppingStore.reset()
   router.push({ name: 'profile-selection' })
 }
 
-// Charger le profil au montage du composant
+// Charger le profil et sa liste de courses au montage du composant
 onMounted(async () => {
-  const profileId = route.params.profileId
+  const profileId = parseInt(route.params.profileId)
   if (profileId) {
     try {
+      // Charger le profil
       await profileStore.loadProfile(profileId)
+      // Charger la liste de courses
+      await shoppingStore.loadShoppingList(profileId)
     } catch (error) {
-      console.error('Erreur lors du chargement du profil:', error)
+      console.error('Erreur lors du chargement:', error)
       router.push({ name: 'profile-selection' })
     }
   } else {
