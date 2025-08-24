@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { useShoppingListStore } from '../stores/counter.js'
+import { useShoppingListStore } from '../stores/shoppingList.js'
 
 const store = useShoppingListStore()
 

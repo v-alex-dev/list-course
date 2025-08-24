@@ -65,11 +65,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useShoppingListStore } from '../stores/counter.js'
-import { useProfileStore } from '../stores/profiles.js'
+import { useShoppingListStore } from '../stores/shoppingList.js'
 
 const shoppingStore = useShoppingListStore()
-const profileStore = useProfileStore()
 
 const props = defineProps({
   item: {
@@ -85,7 +83,7 @@ const tag = computed(() => {
 })
 
 const toggleCompleted = async () => {
-  await profileStore.toggleItemCompleted(props.item.id)
+  await shoppingStore.toggleItemCompleted(props.item.id)
 }
 
 const showDeleteConfirm = () => {
@@ -97,7 +95,7 @@ const hideDeleteConfirm = () => {
 }
 
 const confirmDelete = async () => {
-  await profileStore.removeItem(props.item.id)
+  await shoppingStore.deleteItem(props.item.id)
   hideDeleteConfirm()
 }
 </script>

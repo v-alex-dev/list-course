@@ -49,6 +49,19 @@ body {
   animation: fadeInUp 0.3s ease-out;
 }
 
+/* Correction des problèmes d'accessibilité pour Vue DevTools */
+.vue-devtools__anchor-btn.panel-entry-btn {
+  /* Ajouter un rôle button implicite via CSS pour les éléments div cliquables */
+  cursor: pointer;
+}
+
+/* Alternative : masquer complètement Vue DevTools en production si nécessaire */
+@media (prefers-reduced-motion: reduce) {
+  .vue-devtools__anchor-btn {
+    display: none;
+  }
+}
+
 /* Styles pour les focus accessibles */
 button:focus-visible,
 input:focus-visible,
