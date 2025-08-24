@@ -27,7 +27,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useShoppingListStore } from '../stores/counter.js'
+import { useShoppingListStore } from '../stores/shoppingList.js'
 
 const store = useShoppingListStore()
 
