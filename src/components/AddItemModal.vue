@@ -61,11 +61,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useShoppingListStore } from '../stores/counter.js'
-import { useProfileStore } from '../stores/profiles.js'
+import { useShoppingListStore } from '../stores/shoppingList.js'
 
 const shoppingStore = useShoppingListStore()
-const profileStore = useProfileStore()
 
 defineProps({
   isOpen: {
@@ -94,7 +92,7 @@ const selectTag = (tagId) => {
 
 const handleSubmit = async () => {
   if (canSubmit.value) {
-    await profileStore.addItem({
+    await shoppingStore.addItem({
       name: form.value.name.trim(),
       quantity: form.value.quantity,
       tagId: form.value.tagId,
