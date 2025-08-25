@@ -128,7 +128,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
     },
 
     // ===== GESTION DES FILTRES =====
-    toggleTag(tagId) {
+    toggleTagFilter(tagId) {
       const index = this.selectedTags.indexOf(tagId)
       if (index > -1) {
         this.selectedTags.splice(index, 1)
@@ -137,7 +137,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
       }
     },
 
-    clearTagFilter() {
+    clearFilters() {
       this.selectedTags = []
     },
 
