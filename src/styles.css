@@ -2,93 +2,81 @@
 
 /* Reset et styles de base pour l'application */
 * {
-  box-sizing: border-box;
+  @apply box-border;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1f2937;
-  overflow-x: hidden;
+  @apply m-0 p-0 bg-slate-50 text-gray-900 overflow-x-hidden;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-/* Styles pour les scrollbars - Simplifiés */
+/* Styles pour les scrollbars avec Tailwind */
 ::-webkit-scrollbar {
-  width: 6px;
+  @apply w-2;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  @apply bg-slate-100;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  @apply bg-slate-300 rounded;
 }
 
-/* Animation simplifiée - Plus performante */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
+
+/* Animation d'entrée pour les éléments */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Animation simplifiée pour mobile */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .fade-in {
   animation: fadeIn 0.2s ease-out;
 }
 
-
-/* Reset et styles de base pour l'application */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1f2937;
-  overflow-x: hidden;
-}
-
-/* Styles pour les scrollbars - Simplifiés */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-/* Animation simplifiée - Plus performante */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
-
-/* Optimisation mobile - Suppression des effets coûteux */
+/* OPTIMISATIONS PERFORMANCE MOBILE */
 @media (max-width: 768px) {
   body {
-    font-size: 14px;
+    @apply text-sm;
   }
-  
-  /* Désactiver les animations coûteuses sur mobile */
-  *, *::before, *::after {
-    animation-duration: 0.1s !important;
-    transition-duration: 0.1s !important;
-    backdrop-filter: none !important;
-    filter: none !important;
+
+  /* Réduire la durée des animations sur mobile */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.15s !important;
+    transition-duration: 0.15s !important;
+  }
+
+  /* Optimiser backdrop-filter sur mobile */
+  .backdrop-blur-lg,
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px) !important;
   }
 }
 
@@ -96,19 +84,188 @@ body {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+  @apply outline-2 outline-blue-500 outline-offset-2;
 }
+
+/* Correction pour Vue DevTools */
+.vue-devtools__anchor-btn.panel-entry-btn {
+  @apply cursor-pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vue-devtools__anchor-btn {
+    @apply hidden;
+  }
+}
+
+/* CLASSES UTILITAIRES AVEC @apply */
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-group label {
+  @apply block text-sm font-medium text-gray-300 mb-2;
+}
+
+/* Inputs avec style glass et Tailwind */
+.form-input,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+  @apply w-full rounded-full bg-gray-800/50 backdrop-blur-sm border border-gray-600/50 
+         px-4 py-3 text-gray-200 placeholder-gray-500 transition-all duration-300
+         focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50
+         hover:border-gray-500/70 hover:bg-gray-700/50;
+}
+
+textarea {
+  @apply rounded-xl min-h-[100px] resize-none;
+}
+
+select {
+  @apply cursor-pointer;
+}
+
+/* LIENS NÉON avec @apply */
+.link-neon {
+  @apply text-cyan-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-cyan-300 hover:scale-105 cursor-pointer;
+}
+
+.link-neon:hover {
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.8));
+}
+
+.link-neon-pink {
+  @apply text-pink-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-pink-300 hover:scale-105 cursor-pointer;
+}
+
+.link-neon-pink:hover {
+  filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.8));
+}
+
+.link-neon-green {
+  @apply text-green-400 font-medium transition-all duration-300 ease-in-out
+         hover:text-green-300 hover:scale-105 cursor-pointer;
+}
+
+.link-neon-green:hover {
+  filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.8));
+}
+
+/* ONGLETS avec @apply */
+.tabs-container {
+  @apply bg-gray-900/30 backdrop-blur-lg border border-gray-600/30 rounded-xl p-1 
+         flex space-x-1 shadow-xl;
+}
+
+.tab {
+  @apply flex-1 px-4 py-2 rounded-lg text-center font-medium transition-all duration-300
+         text-gray-400 hover:text-gray-200 hover:bg-gray-700/50 cursor-pointer;
+}
+
+.tab.active {
+  @apply bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-sm 
+         border border-cyan-400/30 text-white shadow-lg;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.3));
+}
+
+.tab:hover:not(.active) {
+  @apply bg-gray-700/30 backdrop-blur-sm scale-105;
+}
+
+/* CARDS GLASS avec @apply */
+.card-glass {
+  @apply bg-gray-900/40 backdrop-blur-lg border border-gray-600/30 rounded-xl p-6 
+         shadow-2xl transition-all duration-300 hover:scale-[1.02]
+         hover:border-gray-500/50;
+}
+
+.card-glass:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.card-glass-highlight {
+  @apply bg-gradient-to-br from-cyan-500/10 to-purple-500/10 backdrop-blur-lg 
+         border border-cyan-400/20 rounded-xl p-6 shadow-2xl transition-all duration-300
+         hover:scale-[1.02] hover:border-cyan-400/40
+         hover:from-cyan-500/15 hover:to-purple-500/15;
+}
+
+.card-glass-highlight:hover {
+  box-shadow: 0 25px 50px -12px rgba(34, 211, 238, 0.3);
+}
+
+/* EFFECTS avec @apply */
+.glow-cyan {
+  filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.5));
+}
+
+.glow-purple {
+  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
+}
+
+.glow-pink {
+  filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.5));
+}
+
+/* Animation de pulsation pour les éléments importants */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.8));
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* RESPONSIVE avec @apply */
 @media (max-width: 768px) {
-  body {
-    font-size: 14px;
+  .form {
+    @apply mx-4 p-4;
   }
-  
-  /* Désactiver les animations coûteuses sur mobile */
-  *, *::before, *::after {
-    animation-duration: 0s !important;
-    transition-duration: 0s !important;
+
+  .tabs-container {
+    @apply flex-col space-x-0 space-y-1;
   }
+
+  .btn-glass,
+  .btn-glass-primary,
+  .btn-glass-secondary {
+    @apply w-full;
+  }
+
+  /* Optimisations mobile pour les effets */
+  .glow-cyan,
+  .glow-purple,
+  .glow-pink {
+    filter: none !important;
+  }
+
+  .animate-pulse-glow {
+    animation: none !important;
+  }
+}
+body {
+  font-size: 14px;
+}
+
+/* Désactiver les animations coûteuses sur mobile */
+*,
+*::before,
+*::after {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
 }
 
 /* Styles pour les focus accessibles */

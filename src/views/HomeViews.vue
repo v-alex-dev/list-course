@@ -54,66 +54,61 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-    <div class="text-center mb-8">
-      <div v-if="currentProfile" class="mb-4">
-        <div class="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl px-4 py-2">
-          <span class="text-2xl">{{ currentProfile.avatar }}</span>
-          <span class="text-white font-medium">{{ currentProfile.name }}</span>
+  <div class="shopping-list-container">
+    <div class="shopping-list-header">
+      <div class="profile-info" v-if="currentProfile">
+        <div class="profile-badge">
+          <span class="profile-avatar">{{ currentProfile.avatar }}</span>
+          <span class="profile-name">{{ currentProfile.name }}</span>
         </div>
-        <div class="mt-2">
-          <button @click="goBackToProfiles" class="bg-cyan-500/20 border border-cyan-400/30 text-cyan-400 px-4 py-1 rounded-lg text-sm hover:bg-cyan-500/30 transition-colors">
-            🔄 Changer
-          </button>
+        <div class="profile-actions">
+          <button @click="goBackToProfiles" class="change-profile-btn">🔄 Changer</button>
         </div>
       </div>
 
-      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Ma Liste de Courses</h1>
-      
-      <div v-if="totalItemsCount > 0" class="inline-block bg-slate-800/50 backdrop-blur-sm border border-cyan-400/30 rounded-2xl px-6 py-3">
-        <span class="text-white font-medium block mb-2">
+      <h1 class="page-title">Ma Liste de Courses</h1>
+      <div class="progress-info" v-if="totalItemsCount > 0">
+        <span class="progress-text">
           {{ completedItemsCount }} / {{ totalItemsCount }} articles
         </span>
-        <div class="w-48 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+        <div class="progress-bar">
           <div
-            class="h-full bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full transition-all duration-300"
+            class="progress-fill"
             :style="{ width: `${(completedItemsCount / totalItemsCount) * 100}%` }"
           ></div>
         </div>
       </div>
     </div>
 
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="main-content">
       <!-- Filtres -->
       <TagFilters />
 
       <!-- Liste des articles à acheter -->
-      <div v-if="uncompletedItems.length > 0" class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-        <h2 class="text-xl font-semibold text-white mb-4">À acheter</h2>
-        <div class="space-y-3">
+      <div v-if="uncompletedItems.length > 0" class="items-section">
+        <h2 class="section-title">À acheter</h2>
+        <div class="items-grid">
           <ShoppingItem v-for="item in uncompletedItems" :key="item.id" :item="item" />
         </div>
       </div>
 
       <!-- Liste des articles terminés -->
-      <div v-if="completedItems.length > 0" class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-white">Terminé</h2>
-          <button @click="clearCompleted" class="bg-red-500/20 border border-red-400/30 text-red-400 px-4 py-2 rounded-xl text-sm hover:bg-red-500/30 transition-colors">
-            Tout supprimer
-          </button>
+      <div v-if="completedItems.length > 0" class="items-section">
+        <div class="completed-header">
+          <h2 class="section-title">Terminé</h2>
+          <button @click="clearCompleted" class="clear-completed-btn">Tout supprimer</button>
         </div>
-        <div class="space-y-3">
+        <div class="items-grid">
           <ShoppingItem v-for="item in completedItems" :key="item.id" :item="item" />
         </div>
       </div>
 
       <!-- Message si aucun article -->
-      <div v-if="filteredItems.length === 0" class="text-center py-16">
-        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 max-w-md mx-auto">
-          <div class="text-6xl mb-4">🛒</div>
-          <h3 class="text-2xl font-semibold text-white mb-2">Votre liste est vide</h3>
-          <p class="text-slate-300 leading-relaxed">
+      <div v-if="filteredItems.length === 0" class="empty-state">
+        <div class="empty-content">
+          <div class="empty-icon">🛒</div>
+          <h3 class="empty-title">Votre liste est vide</h3>
+          <p class="empty-description">
             Commencez à ajouter des articles à votre liste de courses !
           </p>
         </div>
@@ -129,8 +124,291 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Optimisation mobile - Réduction des transitions */
+.shopping-list-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  padding: 1rem;
+}
+
+.shopping-list-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.profile-info {
+  margin-bottom: 1rem;
+}
+
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(31, 41, 55, 0.4);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* Backdrop-filter seulement sur desktop pour les performances */
+@media (min-width: 769px) {
+  .profile-badge {
+    backdrop-filter: blur(16px);
+  }
+}
+
+.profile-avatar {
+  font-size: 1.5rem;
+}
+
+.profile-name {
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.change-profile-btn {
+  background: rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #06b6d4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.change-profile-btn:hover {
+  background: rgba(6, 182, 212, 0.3);
+  transform: scale(1.05);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #f9fafb;
+  margin: 0 0 1rem 0;
+}
+
+/* Text-shadow seulement sur desktop */
+@media (min-width: 769px) {
+  .page-title {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  }
+}
+
+.progress-info {
+  display: inline-block;
+  background: rgba(31, 41, 55, 0.4);
+  border-radius: 20px;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* Backdrop-filter seulement sur desktop */
+@media (min-width: 769px) {
+  .progress-info {
+    backdrop-filter: blur(16px);
+  }
+}
+
+.progress-text {
+  color: #f9fafb;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 6px;
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4 0%, #8b5cf6 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Box-shadow seulement sur desktop */
+@media (min-width: 769px) {
+  .progress-fill {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+}
+
+.main-content {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.items-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Backdrop-filter seulement sur desktop */
+@media (min-width: 769px) {
+  .items-section {
+    backdrop-filter: blur(10px);
+  }
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0 0 1rem 0;
+}
+
+/* Text-shadow seulement sur desktop */
+@media (min-width: 769px) {
+  .section-title {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+}
+
+.completed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.clear-completed-btn {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #fca5a5;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Backdrop-filter et effets avancés seulement sur desktop */
+@media (min-width: 769px) {
+  .clear-completed-btn {
+    backdrop-filter: blur(8px);
+  }
+
+  .clear-completed-btn:hover {
+    background: rgba(220, 38, 38, 0.3);
+    color: #f87171;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+  }
+}
+
+.items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Backdrop-filter seulement sur desktop */
+@media (min-width: 769px) {
+  .empty-content {
+    backdrop-filter: blur(10px);
+  }
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Text-shadow seulement sur desktop */
+@media (min-width: 769px) {
+  .empty-title {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+}
+
+.empty-description {
+  color: rgba(249, 250, 251, 0.8);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Optimisations mobile */
 @media (max-width: 768px) {
+  .shopping-list-container {
+    padding: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .progress-info {
+    padding: 0.5rem 1rem;
+  }
+
+  .progress-bar {
+    width: 150px;
+  }
+
+  .items-section {
+    padding: 0.75rem;
+  }
+
+  .items-grid {
+    gap: 0.375rem;
+  }
+
+  .main-content {
+    gap: 1rem;
+  }
+
+  .completed-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .empty-content {
+    padding: 1.5rem;
+  }
+
+  /* Réduire les transitions sur mobile */
   * {
     transition-duration: 0.15s !important;
   }
