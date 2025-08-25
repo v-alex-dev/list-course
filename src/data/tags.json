@@ -59,6 +59,18 @@
       "name": "frais",
       "color": "#16a085",
       "icon": "❄️"
+    },
+    {
+      "id": 11,
+      "name": "animaux",
+      "color": "#2980b9",
+      "icon": "🐾"
+    },
+    {
+      "id": 12,
+      "name": "surgelés",
+      "color": "#7f8c8d",
+      "icon": "🧊"
     }
   ]
 }
