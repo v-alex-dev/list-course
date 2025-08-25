@@ -8,16 +8,15 @@
 body {
   margin: 0;
   padding: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background: #f8fafc;
   color: #1f2937;
   overflow-x: hidden;
 }
 
-/* Styles pour les scrollbars */
+/* Styles pour les scrollbars - Simplifiés */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -26,39 +25,89 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+/* Animation simplifiée - Plus performante */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Animation d'entrée pour les éléments */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+
+/* Reset et styles de base pour l'application */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f8fafc;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+/* Styles pour les scrollbars - Simplifiés */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+/* Animation simplifiée - Plus performante */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Optimisation mobile - Suppression des effets coûteux */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* Désactiver les animations coûteuses sur mobile */
+  *, *::before, *::after {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+    backdrop-filter: none !important;
+    filter: none !important;
   }
 }
 
-.fade-in-up {
-  animation: fadeInUp 0.3s ease-out;
+/* Styles pour les focus accessibles */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
-
-/* Correction des problèmes d'accessibilité pour Vue DevTools */
-.vue-devtools__anchor-btn.panel-entry-btn {
-  /* Ajouter un rôle button implicite via CSS pour les éléments div cliquables */
-  cursor: pointer;
-}
-
-/* Alternative : masquer complètement Vue DevTools en production si nécessaire */
-@media (prefers-reduced-motion: reduce) {
-  .vue-devtools__anchor-btn {
-    display: none;
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Désactiver les animations coûteuses sur mobile */
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
   }
 }
 
