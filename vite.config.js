@@ -13,8 +13,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'easysholi',
-        short_name: 'easysholi',
+        name: 'EasySholi - Liste de Courses',
+        short_name: 'EasySholi',
         description: 'Une app pour pouvoir gérer une liste de course facilement',
         display: 'standalone',
         start_url: '/',
@@ -22,6 +22,8 @@ export default defineConfig({
         background_color: '#0f172a', // couleur de fond de l'écran de lancement
         theme_color: '#06b6d4', // couleur de la barre d'adresse
         orientation: 'portrait',
+        categories: ['shopping', 'productivity'],
+        lang: 'fr',
         icons: [
           {
             src: '/icons/favicon-16x16.png',
@@ -39,9 +41,21 @@ export default defineConfig({
             type: 'image/png',
           },
           {
+            src: '/icons/favicon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+          {
             src: '/icons/favicon-256x256.png',
             sizes: '256x256',
             type: 'image/png',
+          },
+          {
+            src: '/icons/favicon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
           },
         ],
       },

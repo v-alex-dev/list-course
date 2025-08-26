@@ -50,17 +50,38 @@ const showInstall = ref(false)
 let deferredPrompt = null
 /* Le bouton utilise uniquement les classes utilitaires Tailwind pour l'harmonisation visuelle. */
 onMounted(() => {
+  // Debug: vérifier si la PWA est déjà installée
+  if ('serviceWorker' in navigator) {
+    console.log('Service Worker supporté')
+  }
+
+  // Vérifier si l'app est déjà installée
+  if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+    console.log('App déjà installée')
+    return
+  }
+
   window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('beforeinstallprompt déclenché')
     e.preventDefault()
     deferredPrompt = e
     showInstall.value = true
   })
+
+  // Pour iOS Safari
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  const isStandalone = window.navigator.standalone
+  if (isIOS && !isStandalone) {
+    console.log('iOS détecté, installation manuelle requise')
+    // Vous pouvez afficher un message d'instruction pour iOS ici
+  }
 })
 
 function installPWA() {
   if (deferredPrompt) {
     deferredPrompt.prompt()
-    deferredPrompt.userChoice.then(() => {
+    deferredPrompt.userChoice.then((choiceResult) => {
+      console.log('Choix utilisateur:', choiceResult.outcome)
       showInstall.value = false
       deferredPrompt = null
     })
