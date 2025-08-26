@@ -1,4 +1,31 @@
 @import 'tailwindcss';
+/* Bouton d'installation PWA */
+
+/* Glassmorphism, dark neon, top left */
+.pwa-install-btn {
+  @apply fixed top-4 left-4 z-50 flex items-center justify-center w-12 h-12 rounded-xl shadow-xl border border-cyan-400/60 bg-slate-900/60 backdrop-blur-md transition-all duration-200 cursor-pointer;
+  box-shadow:
+    0 4px 32px 0 rgba(0, 255, 255, 0.25),
+    0 1.5px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pwa-install-btn:hover,
+.pwa-install-btn:focus {
+  @apply border-cyan-300 bg-slate-800/80;
+  box-shadow:
+    0 4px 32px 0 rgba(0, 255, 255, 0.45),
+    0 1.5px 8px 0 rgba(0, 0, 0, 0.35);
+}
+
+.icon-install {
+  @apply w-7 h-7 text-cyan-300 drop-shadow-[0_0_6px_#00fff7] transition-all duration-200;
+}
+
+.sr-only {
+  @apply absolute w-px h-px p-0 m-0 overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+}
 
 /* Reset et styles de base pour l'application */
 * {
