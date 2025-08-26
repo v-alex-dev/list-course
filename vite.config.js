@@ -19,11 +19,12 @@ export default defineConfig({
         display: 'standalone',
         start_url: '/',
         scope: '/',
-        background_color: '#0f172a', // couleur de fond de l'écran de lancement
-        theme_color: '#06b6d4', // couleur de la barre d'adresse
+        background_color: '#0f172a',
+        theme_color: '#06b6d4',
         orientation: 'portrait',
         categories: ['shopping', 'productivity'],
         lang: 'fr',
+        id: 'easysholi-pwa',
         icons: [
           {
             src: '/icons/favicon-16x16.png',

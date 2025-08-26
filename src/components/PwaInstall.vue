@@ -50,6 +50,8 @@ const showInstall = ref(false)
 let deferredPrompt = null
 /* Le bouton utilise uniquement les classes utilitaires Tailwind pour l'harmonisation visuelle. */
 onMounted(() => {
+  console.log('PwaInstall composant monté')
+
   // Debug: vérifier si la PWA est déjà installée
   if ('serviceWorker' in navigator) {
     console.log('Service Worker supporté')
@@ -57,16 +59,36 @@ onMounted(() => {
 
   // Vérifier si l'app est déjà installée
   if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-    console.log('App déjà installée')
+    console.log('App déjà installée en mode standalone')
     return
   }
 
+  // Vérifier si c'est dans un navigateur compatible
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+  const isEdge = /Edg/.test(navigator.userAgent)
+  const isOpera = /OPR/.test(navigator.userAgent)
+
+  console.log('Navigateur:', { isChrome, isEdge, isOpera })
+  console.log('User Agent:', navigator.userAgent)
+
+  // Vérifier le protocole
+  console.log('Protocole:', window.location.protocol)
+
+  // Écouter l'événement beforeinstallprompt
   window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('beforeinstallprompt déclenché')
+    console.log('🎉 beforeinstallprompt déclenché!')
     e.preventDefault()
     deferredPrompt = e
     showInstall.value = true
   })
+
+  // Debug supplémentaire après un délai
+  setTimeout(() => {
+    console.log('Statut après 3 secondes:')
+    console.log('- showInstall:', showInstall.value)
+    console.log('- deferredPrompt:', deferredPrompt)
+    console.log('- display-mode:', window.matchMedia('(display-mode: standalone)').matches)
+  }, 3000)
 
   // Pour iOS Safari
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
