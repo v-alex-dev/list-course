@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: 'easysholi',
         description: 'Une app pour pouvoir gérer une liste de course facilement',
         display: 'standalone',
-        start_url: '/index.html',
+        start_url: '/',
         scope: '/',
         background_color: '#0f172a', // couleur de fond de l'écran de lancement
         theme_color: '#06b6d4', // couleur de la barre d'adresse
