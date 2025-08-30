@@ -17,7 +17,7 @@ export const useToastStore = defineStore('toast', {
   },
 
   actions: {
-    show(message, type = 'info', duration = 4000) {
+    show(message, type = 'info', duration = 2000) {
       const toast = {
         id: this.nextId++,
         message,
@@ -36,7 +36,6 @@ export const useToastStore = defineStore('toast', {
         }, duration)
       }
 
-      console.log(`🍞 Toast ${type}: ${message}`)
       return toast.id
     },
 
