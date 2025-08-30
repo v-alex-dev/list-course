@@ -61,7 +61,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
     saveToLocalStorage(key, data) {
       try {
         localStorage.setItem(key, JSON.stringify(data))
-        console.log(`💾 Données sauvegardées localement: ${key}`)
       } catch (error) {
         console.error('❌ Erreur sauvegarde locale:', error)
       }
@@ -87,7 +86,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
       this.offlineQueue.push(queueItem)
       this.saveToLocalStorage(OFFLINE_QUEUE_KEY, this.offlineQueue)
 
-      console.log('� Action ajoutée à la queue hors ligne:', action.type)
       this.showToast(`📦 Action sauvegardée hors ligne`, 'warning')
     },
 
@@ -98,7 +96,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
     clearOfflineQueue() {
       this.offlineQueue = []
       localStorage.removeItem(OFFLINE_QUEUE_KEY)
-      console.log('🧹 Queue hors ligne vidée')
     },
 
     saveOfflineData(listId, items) {
@@ -134,15 +131,12 @@ export const useShoppingListStore = defineStore('shoppingList', {
       // Met à jour l'état initial
       this.isOnline = navigator.onLine
 
-      console.log('🚀 Store initialisé, mode:', this.isOnline ? 'en ligne' : 'hors ligne')
-
       if (this.isOnline && this.offlineQueue.length > 0) {
         this.syncOfflineData()
       }
     },
 
     async handleOnline() {
-      console.log('🌐 Passage en mode en ligne')
       this.isOnline = true
       this.showToast('🌐 Connexion rétablie', 'info')
 
@@ -152,7 +146,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
     },
 
     handleOffline() {
-      console.log('📴 Passage en mode hors ligne')
       this.isOnline = false
       this.showToast('📴 Mode hors ligne activé', 'warning')
     },
@@ -170,8 +163,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
         for (const action of this.offlineQueue) {
           try {
             const result = await this.executeOfflineAction(action)
-            successCount++
-            console.log(`✅ Action synchronisée: ${action.type}`, result)
+            successCount
 
             // Si c'était une création de liste offline, mettre à jour la liste actuelle
             if (
@@ -181,7 +173,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
               result
             ) {
               this.currentList = result
-              console.log('🔄 Liste mise à jour avec le nouvel ID:', result.id)
             }
           } catch (error) {
             console.error(`❌ Échec synchronisation action ${action.type}:`, error)
@@ -204,10 +195,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
         } else {
           this.showToast(`⚠️ ${failedActions.length} actions ont échoué`, 'warning')
         }
-
-        console.log(
-          `🎉 Synchronisation terminée: ${successCount}/${this.offlineQueue.length + successCount} actions réussies`,
-        )
       } catch (error) {
         console.error('❌ Erreur lors de la synchronisation:', error)
         this.error = 'Erreur lors de la synchronisation des données'
@@ -229,22 +216,16 @@ export const useShoppingListStore = defineStore('shoppingList', {
             // Pour les listes offline, on fusionne avec les données existantes
             const profileId = action.data.listId.replace('offline_', '')
             const existingLists = await dataService.getShoppingLists(profileId)
+            const localItems = action.data.items || []
 
             if (existingLists.length > 0) {
-              // Il y a déjà une liste, on fusionne
-              const serverItems = existingLists[0].items || []
-              const localItems = action.data.items || []
+              // Une liste existe déjà, fusionner les données
+              const serverItems = await dataService.getShoppingItems(existingLists[0].id)
               const mergedItems = this.mergeItems(serverItems, localItems)
-
-              console.log('🔄 Fusion des données hors ligne avec la liste existante')
-              console.log(
-                `📊 Serveur: ${serverItems.length} items, Local: ${localItems.length} items, Fusionné: ${mergedItems.length} items`,
-              )
 
               return await dataService.updateShoppingList(existingLists[0].id, mergedItems)
             } else {
               // Pas de liste existante, on crée une nouvelle
-              console.log("🔄 Création d'une nouvelle liste pour les données hors ligne")
               return await dataService.createShoppingList(profileId, action.data.items)
             }
           } else {
@@ -254,11 +235,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
               const serverItems = currentList[0].items || []
               const localItems = action.data.items || []
               const mergedItems = this.mergeItems(serverItems, localItems)
-
-              console.log('🔄 Fusion des données avec la liste existante')
-              console.log(
-                `📊 Serveur: ${serverItems.length} items, Local: ${localItems.length} items, Fusionné: ${mergedItems.length} items`,
-              )
 
               return await dataService.updateShoppingList(action.data.listId, mergedItems)
             } else {
@@ -276,7 +252,6 @@ export const useShoppingListStore = defineStore('shoppingList', {
               items.push(action.data.item)
               return await dataService.updateShoppingList(currentList[0].id, items)
             } else {
-              console.log('⚠️ Item déjà existant, synchronisation ignorée:', action.data.item.name)
               return currentList[0]
             }
           }
