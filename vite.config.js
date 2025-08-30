@@ -17,6 +17,7 @@ export default defineConfig({
       manifest: {
         name: 'EasySholi - Liste de Courses',
         short_name: 'EasySholi',
+        version: '1.5.0',
         description: 'Une app pour pouvoir gérer une liste de course facilement',
         display: 'standalone',
         start_url: '/',
