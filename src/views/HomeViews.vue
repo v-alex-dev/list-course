@@ -20,8 +20,11 @@ const totalItemsCount = computed(() => shoppingStore.totalItemsCount)
 const currentProfile = computed(() => profileStore.currentProfile)
 
 // Utilisons les getters du shoppingStore
-const uncompletedItems = computed(() => shoppingStore.uncompletedItems)
-const completedItems = computed(() => shoppingStore.completedItems)
+const uncompletedItemsByTag = computed(() => shoppingStore.uncompletedItemsByTag)
+const completedItemsByTag = computed(() => shoppingStore.completedItemsByTag)
+
+// Helper pour obtenir un tag par ID
+const getTagById = (tagId) => shoppingStore.getTagById(tagId)
 
 const clearCompleted = async () => {
   await shoppingStore.clearCompleted()
@@ -84,22 +87,48 @@ onMounted(async () => {
       <!-- Filtres -->
       <TagFilters />
 
-      <!-- Liste des articles à acheter -->
-      <div v-if="uncompletedItems.length > 0" class="items-section">
+      <!-- Liste des articles à acheter groupés par tag -->
+      <div v-if="Object.keys(uncompletedItemsByTag).length > 0" class="items-section">
         <h2 class="section-title">À acheter</h2>
-        <div class="items-grid">
-          <ShoppingItem v-for="item in uncompletedItems" :key="item.id" :item="item" />
+
+        <!-- Groupe pour chaque tag -->
+        <div
+          v-for="(items, tagId) in uncompletedItemsByTag"
+          :key="`uncompleted-${tagId}`"
+          class="tag-group"
+        >
+          <div class="tag-header" v-if="getTagById(Number(tagId))">
+            <span class="tag-icon">{{ getTagById(Number(tagId)).icon }}</span>
+            <h3 class="tag-title">{{ getTagById(Number(tagId)).name }}</h3>
+            <span class="tag-count">{{ items.length }}</span>
+          </div>
+          <div class="items-grid">
+            <ShoppingItem v-for="item in items" :key="item.id" :item="item" />
+          </div>
         </div>
       </div>
 
-      <!-- Liste des articles terminés -->
-      <div v-if="completedItems.length > 0" class="items-section">
+      <!-- Liste des articles terminés groupés par tag -->
+      <div v-if="Object.keys(completedItemsByTag).length > 0" class="items-section">
         <div class="completed-header">
           <h2 class="section-title">Terminé</h2>
           <button @click="clearCompleted" class="clear-completed-btn">Tout supprimer</button>
         </div>
-        <div class="items-grid">
-          <ShoppingItem v-for="item in completedItems" :key="item.id" :item="item" />
+
+        <!-- Groupe pour chaque tag -->
+        <div
+          v-for="(items, tagId) in completedItemsByTag"
+          :key="`completed-${tagId}`"
+          class="tag-group"
+        >
+          <div class="tag-header" v-if="getTagById(Number(tagId))">
+            <span class="tag-icon">{{ getTagById(Number(tagId)).icon }}</span>
+            <h3 class="tag-title">{{ getTagById(Number(tagId)).name }}</h3>
+            <span class="tag-count">{{ items.length }}</span>
+          </div>
+          <div class="items-grid">
+            <ShoppingItem v-for="item in items" :key="item.id" :item="item" />
+          </div>
         </div>
       </div>
 
@@ -322,6 +351,53 @@ onMounted(async () => {
   gap: 0.5rem;
 }
 
+.tag-group {
+  margin-bottom: 1.5rem;
+}
+
+.tag-group:last-child {
+  margin-bottom: 0;
+}
+
+.tag-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.tag-icon {
+  font-size: 1.25rem;
+}
+
+.tag-title {
+  color: rgba(249, 250, 251, 0.9);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.tag-count {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+/* Text-shadow seulement sur desktop */
+@media (min-width: 769px) {
+  .tag-title {
+    text-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+  }
+}
+
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -392,6 +468,28 @@ onMounted(async () => {
 
   .items-grid {
     gap: 0.375rem;
+  }
+
+  .tag-group {
+    margin-bottom: 1rem;
+  }
+
+  .tag-header {
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-icon {
+    font-size: 1rem;
+  }
+
+  .tag-title {
+    font-size: 0.875rem;
+  }
+
+  .tag-count {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.625rem;
   }
 
   .main-content {

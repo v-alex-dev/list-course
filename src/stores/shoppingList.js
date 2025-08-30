@@ -47,6 +47,35 @@ export const useShoppingListStore = defineStore('shoppingList', {
       return this.filteredItems.filter((item) => item.completed)
     },
 
+    // Nouveaux getters pour le groupement par tag
+    uncompletedItemsByTag() {
+      const itemsByTag = {}
+      this.uncompletedItems.forEach((item) => {
+        if (!itemsByTag[item.tagId]) {
+          itemsByTag[item.tagId] = []
+        }
+        itemsByTag[item.tagId].push(item)
+      })
+      return itemsByTag
+    },
+
+    completedItemsByTag() {
+      const itemsByTag = {}
+      this.completedItems.forEach((item) => {
+        if (!itemsByTag[item.tagId]) {
+          itemsByTag[item.tagId] = []
+        }
+        itemsByTag[item.tagId].push(item)
+      })
+      return itemsByTag
+    },
+
+    // Tags qui ont des éléments non complétés
+    availableTagsWithItems() {
+      const tagIds = new Set(this.items.filter((item) => !item.completed).map((item) => item.tagId))
+      return this.tags.filter((tag) => tagIds.has(tag.id))
+    },
+
     hasOfflineData: (state) => state.offlineQueue.length > 0,
 
     connectionStatus() {
