@@ -2,9 +2,12 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProfileStore } from '../stores/profiles.js'
+import LoaderSpinner from '../components/LoaderSpinner.vue'
+import { useLoading } from '../composables/useLoading.js'
 
 const router = useRouter()
 const profileStore = useProfileStore()
+const { isLoadingProfiles, loadingMessage } = useLoading()
 
 const showCreateForm = ref(false)
 const newProfileForm = ref({
@@ -20,8 +23,8 @@ const selectProfile = async (profileId) => {
   try {
     await profileStore.loadProfile(profileId)
     router.push({ name: 'shopping-list', params: { profileId } })
-  } catch (error) {
-    console.error('Erreur lors de la sélection du profil:', error)
+  } catch {
+    // console.error('Erreur lors de la sélection du profil:', error)
   }
 }
 
@@ -40,8 +43,8 @@ const createProfile = async () => {
 
     // Aller directement sur le nouveau profil
     await selectProfile(newProfile.id)
-  } catch (error) {
-    console.error('Erreur lors de la création du profil:', error)
+  } catch {
+    // console.error('Erreur lors de la création du profil:', error)
     // Optionnel : afficher un message d'erreur à l'utilisateur
   }
 }
@@ -54,14 +57,17 @@ const selectAvatar = (avatar) => {
 onMounted(async () => {
   try {
     await profileStore.loadProfiles()
-  } catch (error) {
-    console.error('Erreur lors du chargement des profils:', error)
+  } catch {
+    // console.error('Erreur lors du chargement des profils:', error)
   }
 })
 </script>
 
 <template>
   <div class="profile-selection-container">
+    <!-- Loader global -->
+    <LoaderSpinner :show="isLoadingProfiles" :message="loadingMessage" />
+
     <div class="profile-selection-content">
       <div class="header">
         <h1 class="title">Choisissez votre profil</h1>
@@ -69,7 +75,7 @@ onMounted(async () => {
       </div>
 
       <!-- Liste des profils existants -->
-      <div class="profiles-grid" v-if="profiles.length > 0">
+      <div class="profiles-grid" v-if="profiles.length > 0 && !isLoadingProfiles">
         <div
           v-for="profile in profiles"
           :key="profile.id"
@@ -82,7 +88,7 @@ onMounted(async () => {
       </div>
 
       <!-- Bouton pour créer un nouveau profil -->
-      <div class="create-section">
+      <div class="create-section" v-if="!isLoadingProfiles">
         <button v-if="!showCreateForm" @click="showCreateForm = true" class="create-profile-btn">
           ➕ Créer un nouveau profil
         </button>

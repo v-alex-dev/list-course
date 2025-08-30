@@ -3,10 +3,11 @@
     <button
       @click="$emit('toggle')"
       class="checkbox-button"
-      :class="{ checked: checked }"
+      :class="{ checked: checked, disabled: disabled }"
+      :disabled="disabled"
       type="button"
     >
-      <div class="checkbox" :class="{ checked: checked }">
+      <div class="checkbox" :class="{ checked: checked, disabled: disabled }">
         <svg v-if="checked" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
           <polyline points="20,6 9,17 4,12"></polyline>
         </svg>
@@ -18,6 +19,10 @@
 <script setup>
 defineProps({
   checked: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
     type: Boolean,
     default: false,
   },
@@ -61,6 +66,15 @@ defineEmits(['toggle'])
   border-color: #10b981;
   color: white;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+.checkbox-button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox.disabled {
+  opacity: 0.5;
 }
 
 .checkbox svg {

@@ -24,7 +24,7 @@ export const useProfileStore = defineStore('profiles', {
       this.error = null
       try {
         this.profiles = await dataService.getProfiles()
-        console.log('✅ Profils chargés depuis Supabase:', this.profiles.length)
+        // console.log('✅ Profils chargés depuis Supabase:', this.profiles.length)
       } catch (error) {
         console.error('❌ Erreur lors du chargement des profils:', error)
         this.error = 'Erreur lors du chargement des profils'
@@ -40,7 +40,7 @@ export const useProfileStore = defineStore('profiles', {
       try {
         const newProfile = await dataService.createProfile(profileData.name)
         this.profiles.push(newProfile)
-        console.log('✅ Profil créé:', newProfile)
+        // console.log('✅ Profil créé:', newProfile)
         return newProfile
       } catch (error) {
         console.error('❌ Erreur lors de la création du profil:', error)
@@ -57,7 +57,7 @@ export const useProfileStore = defineStore('profiles', {
       try {
         const profile = await dataService.getProfile(profileId)
         this.currentProfile = profile
-        console.log(`✅ Profil ${profile.name} chargé`)
+        // console.log(`✅ Profil ${profile.name} chargé`)
         return profile
       } catch (error) {
         console.error('❌ Erreur lors du chargement du profil:', error)

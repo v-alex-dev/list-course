@@ -7,11 +7,14 @@ import TagFilters from '../components/TagFilters.vue'
 import ShoppingItem from '../components/ShoppingItem.vue'
 import AddItemModal from '../components/AddItemModal.vue'
 import FloatingActionButton from '../components/FloatingActionButton.vue'
+import LoaderSpinner from '../components/LoaderSpinner.vue'
+import { useLoading } from '../composables/useLoading.js'
 
 const route = useRoute()
 const router = useRouter()
 const shoppingStore = useShoppingListStore()
 const profileStore = useProfileStore()
+const { isLoading, loadingMessage } = useLoading()
 
 const filteredItems = computed(() => shoppingStore.filteredItems)
 const isModalOpen = computed(() => shoppingStore.isModalOpen)
@@ -45,8 +48,8 @@ onMounted(async () => {
       await profileStore.loadProfile(profileId)
       // Charger la liste de courses
       await shoppingStore.loadShoppingList(profileId)
-    } catch (error) {
-      console.error('Erreur lors du chargement:', error)
+    } catch {
+      // console.error('Erreur lors du chargement:', error)
       router.push({ name: 'profile-selection' })
     }
   } else {
@@ -58,6 +61,9 @@ onMounted(async () => {
 
 <template>
   <div class="shopping-list-container">
+    <!-- Loader global -->
+    <LoaderSpinner :show="isLoading" :message="loadingMessage" />
+
     <div class="shopping-list-header">
       <div class="profile-info" v-if="currentProfile">
         <div class="profile-badge">

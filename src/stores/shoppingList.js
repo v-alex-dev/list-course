@@ -15,6 +15,12 @@ export const useShoppingListStore = defineStore('shoppingList', {
     selectedTags: [],
     isModalOpen: false,
     loading: false,
+    loadingStates: {
+      addingItem: false,
+      updatingItem: false,
+      deletingItem: false,
+      saving: false,
+    },
     error: null,
     isOnline: navigator.onLine,
     pendingSync: false,
@@ -446,7 +452,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
         if (useOfflineFirst && (!this.isOnline || this.getOfflineData(profileId))) {
           const offlineData = this.getOfflineData(profileId)
           if (offlineData) {
-            console.log('📱 Chargement des données hors ligne')
+            // console.log('📱 Chargement des données hors ligne')
             this.items = offlineData.items
             this.currentList = {
               id: `offline_${profileId}`,
@@ -478,11 +484,11 @@ export const useShoppingListStore = defineStore('shoppingList', {
 
           // Sauvegarder en local
           this.saveOfflineData(profileId, this.items)
-          console.log('✅ Liste de courses chargée depuis le serveur:', this.currentList.id)
+          // console.log('✅ Liste de courses chargée depuis le serveur:', this.currentList.id)
           this.showToast('✅ Liste chargée', 'success')
         } else {
           // Hors ligne et pas de données locales
-          console.log("📴 Hors ligne: création d'une liste temporaire")
+          // console.log("📴 Hors ligne: création d'une liste temporaire")
           this.currentList = {
             id: `offline_${profileId}`,
             profile_id: profileId,
@@ -497,7 +503,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
         // En cas d'erreur, essayer les données hors ligne
         const offlineData = this.getOfflineData(profileId)
         if (offlineData) {
-          console.log('🔄 Utilisation des données hors ligne de secours')
+          // console.log('🔄 Utilisation des données hors ligne de secours')
           this.items = offlineData.items
           this.currentList = {
             id: `offline_${profileId}`,
@@ -531,13 +537,13 @@ export const useShoppingListStore = defineStore('shoppingList', {
             typeof this.currentList.id === 'string' &&
             this.currentList.id.startsWith('offline_')
           ) {
-            console.log("🔄 Création d'une nouvelle liste en base pour les données hors ligne")
+            // console.log("🔄 Création d'une nouvelle liste en base pour les données hors ligne")
             const newList = await dataService.createShoppingList(
               this.currentList.profile_id,
               this.items,
             )
             this.currentList = newList
-            console.log('✅ Nouvelle liste créée:', newList.id)
+            // console.log('✅ Nouvelle liste créée:', newList.id)
             this.showToast('✅ Liste créée en ligne', 'success')
           } else {
             // Mise à jour d'une liste existante
@@ -546,7 +552,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
               this.items,
             )
             this.currentList = updatedList
-            console.log('✅ Liste sauvegardée sur le serveur')
+            // console.log('✅ Liste sauvegardée sur le serveur')
             this.showToast('✅ Données sauvegardées', 'success')
           }
         } catch (error) {
@@ -560,7 +566,7 @@ export const useShoppingListStore = defineStore('shoppingList', {
               profileId: this.currentList.profile_id,
             },
           })
-          console.log('📦 Action ajoutée à la queue hors ligne')
+          // console.log('📦 Action ajoutée à la queue hors ligne')
         } finally {
           this.loading = false
         }

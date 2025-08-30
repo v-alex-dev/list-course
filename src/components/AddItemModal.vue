@@ -51,8 +51,13 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" @click="closeModal" class="btn-cancel">Annuler</button>
-          <button type="submit" :disabled="!canSubmit" class="btn-submit">Ajouter</button>
+          <button type="button" @click="closeModal" :disabled="isSubmitting" class="btn-cancel">
+            Annuler
+          </button>
+          <button type="submit" :disabled="!canSubmit" class="btn-submit">
+            <span v-if="isSubmitting" class="loading-spinner"></span>
+            {{ isSubmitting ? 'Ajout...' : 'Ajouter' }}
+          </button>
         </div>
       </form>
     </div>
@@ -80,10 +85,12 @@ const form = ref({
   tagId: null,
 })
 
+const isSubmitting = ref(false)
+
 const tags = computed(() => shoppingStore.tags)
 
 const canSubmit = computed(() => {
-  return form.value.name.trim() && form.value.tagId
+  return form.value.name.trim() && form.value.tagId && !isSubmitting.value
 })
 
 const selectTag = (tagId) => {
@@ -92,20 +99,25 @@ const selectTag = (tagId) => {
 
 const handleSubmit = async () => {
   if (canSubmit.value) {
-    await shoppingStore.addItem({
-      name: form.value.name.trim(),
-      quantity: form.value.quantity,
-      tagId: form.value.tagId,
-    })
+    isSubmitting.value = true
+    try {
+      await shoppingStore.addItem({
+        name: form.value.name.trim(),
+        quantity: form.value.quantity,
+        tagId: form.value.tagId,
+      })
 
-    // Reset form
-    form.value = {
-      name: '',
-      quantity: 1,
-      tagId: null,
+      // Reset form
+      form.value = {
+        name: '',
+        quantity: 1,
+        tagId: null,
+      }
+
+      closeModal()
+    } finally {
+      isSubmitting.value = false
     }
-
-    closeModal()
   }
 }
 
@@ -304,6 +316,26 @@ const closeModal = () => {
   border-color: rgba(156, 163, 175, 0.5);
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
