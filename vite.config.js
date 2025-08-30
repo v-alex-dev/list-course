@@ -12,6 +12,8 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      includeAssets: ['favicon.ico', 'icons/*.png'],
       manifest: {
         name: 'EasySholi - Liste de Courses',
         short_name: 'EasySholi',
@@ -62,15 +64,30 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/easysholi\.netlify\.app\/.*$/,
+            urlPattern: ({ request }) => request.destination === 'document',
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'easysholi-cache',
+              cacheName: 'documents-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 jours
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.origin.includes('supabase.co'),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-api-cache',
+              networkTimeoutSeconds: 3,
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 jours
+                maxAgeSeconds: 60 * 5, // 5 minutes
               },
             },
           },

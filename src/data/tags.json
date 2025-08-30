@@ -14,15 +14,9 @@
     },
     {
       "id": 3,
-      "name": "légumes",
+      "name": "fruits/légumes",
       "color": "#2ecc71",
-      "icon": "🥬"
-    },
-    {
-      "id": 4,
-      "name": "fruits",
-      "color": "#f39c12",
-      "icon": "🍎"
+      "icon": "🍅"
     },
     {
       "id": 5,
@@ -71,6 +65,12 @@
       "name": "surgelés",
       "color": "#7f8c8d",
       "icon": "🧊"
+    },
+    {
+      "id": 13,
+      "name": "bautée",
+      "color": "#8e44ad",
+      "icon": "🧴"
     }
   ]
 }
