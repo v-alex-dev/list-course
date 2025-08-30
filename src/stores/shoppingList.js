@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { dataService } from '../services/dataService.js'
+import { useToastStore } from './toast.js'
 import tagsData from '../data/tags.json'
 
 // Clés pour le localStorage
@@ -116,11 +117,9 @@ export const useShoppingListStore = defineStore('shoppingList', {
 
     // ===== GESTION DES TOASTS =====
     showToast(message, type = 'info') {
-      // Import dynamique pour éviter les dépendances circulaires
-      import('./toast.js').then(({ useToastStore }) => {
-        const toastStore = useToastStore()
-        toastStore.show(message, type)
-      })
+      // Utilisation du store toast avec import statique
+      const toastStore = useToastStore()
+      toastStore.show(message, type)
     },
 
     // ===== INITIALIZATION =====
